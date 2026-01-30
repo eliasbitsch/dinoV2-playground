@@ -1,0 +1,5 @@
+[console_scripts]
+circle_flight = jet_commander.circle_flight:main
+dino_tracker = jet_commander.dino_tracker:main
+target_follower = jet_commander.target_follower:main
+target_mover = jet_commander.target_mover:main

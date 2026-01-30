@@ -1,0 +1,16 @@
+package.xml
+setup.cfg
+setup.py
+../../build/jet_commander/jet_commander.egg-info/PKG-INFO
+../../build/jet_commander/jet_commander.egg-info/SOURCES.txt
+../../build/jet_commander/jet_commander.egg-info/dependency_links.txt
+../../build/jet_commander/jet_commander.egg-info/entry_points.txt
+../../build/jet_commander/jet_commander.egg-info/requires.txt
+../../build/jet_commander/jet_commander.egg-info/top_level.txt
+../../build/jet_commander/jet_commander.egg-info/zip-safe
+jet_commander/__init__.py
+jet_commander/dino_tracker.py
+jet_commander/target_follower.py
+jet_commander/target_mover.py
+launch/target_follow.launch.py
+resource/jet_commander

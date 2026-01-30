@@ -1,0 +1,567 @@
+<?xml version="1.0" ?>
+<sdf version='1.7'>
+  <world name='sonoma'>
+    <scene>
+      <grid>false</grid>
+      <ambient>0.6 0.6 0.6 1</ambient>
+    </scene>
+
+    <!-- Sunlight -->
+    <light type="directional" name="sunlight">
+      <pose>0 0 100 0 0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <intensity>1.2</intensity>
+      <direction>-0.5 0.5 -1</direction>
+      <diffuse>1.0 1.0 1.0 1</diffuse>
+      <specular>0.8 0.8 0.8 1</specular>
+    </light>
+
+    <!-- Fill light from opposite side -->
+    <light type="directional" name="fill_light">
+      <pose>0 0 100 0 0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <intensity>0.6</intensity>
+      <direction>0.5 -0.5 -0.8</direction>
+      <diffuse>0.8 0.85 1.0 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+    </light>
+    <plugin
+      filename="ignition-gazebo-physics-system"
+      name="ignition::gazebo::systems::Physics">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-sensors-system"
+      name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-user-commands-system"
+      name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-scene-broadcaster-system"
+      name="ignition::gazebo::systems::SceneBroadcaster">
+    </plugin>
+
+    <gui fullscreen="0">
+
+      <!-- 3D scene -->
+      <plugin filename="GzScene3D" name="3D View">
+        <ignition-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </ignition-gui>
+
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.5 0.8 0.95</background_color>
+        <camera_pose>337 -150 8 0 0.3 0</camera_pose>
+        <camera_follow>
+          <target>jet_robot</target>
+          <p_gain>0.5</p_gain>
+          <offset>-3 0 4</offset>
+        </camera_follow>
+      </plugin>
+
+      <!-- World control -->
+      <plugin filename="WorldControl" name="World control">
+        <ignition-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </ignition-gui>
+
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>false</start_paused>
+
+      </plugin>
+
+      <!-- World statistics -->
+      <plugin filename="WorldStats" name="World stats">
+        <ignition-gui>
+          <title>World stats</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">110</property>
+          <property type="double" key="width">290</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="right" target="right"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </ignition-gui>
+
+        <sim_time>true</sim_time>
+        <real_time>true</real_time>
+        <real_time_factor>true</real_time_factor>
+        <iterations>true</iterations>
+      </plugin>
+
+      <!-- Camera display -->
+      <plugin filename="ImageDisplay" name="Front Camera">
+        <ignition-gui>
+          <property key="state" type="string">docked</property>
+        </ignition-gui>
+        <topic>/front_camera</topic>
+      </plugin>
+
+      <!-- Teleop control -->
+      <plugin filename="Teleop" name="Teleop">
+        <ignition-gui>
+          <property type="string" key="state">docked</property>
+        </ignition-gui>
+        <topic>/cmd_vel</topic>
+      </plugin>
+    </gui>
+
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Sonoma Raceway</uri>
+    </include>
+
+    <!-- Jet Robot with differential drive -->
+    <model name="jet_robot">
+      <pose>410.662 -195.42 7.82 0.0137 0.048 2.478</pose>
+
+      <!-- Chassis -->
+      <link name="chassis">
+        <inertial>
+          <mass>15.0</mass>
+          <inertia>
+            <ixx>8.0</ixx>
+            <iyy>8.0</iyy>
+            <izz>8.0</izz>
+          </inertia>
+        </inertial>
+
+        <visual name="visual">
+          <pose>0 0 0.5 0 0 -1.5708</pose>
+          <geometry>
+            <mesh>
+              <uri>file:///workspace/models/f14_tomcat.stl</uri>
+              <scale>1.5 1.5 1.5</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.3 0.35 0.4 1</ambient>
+            <diffuse>0.4 0.45 0.5 1</diffuse>
+            <specular>0.9 0.9 0.9 1</specular>
+          </material>
+        </visual>
+
+        <collision name="collision">
+          <pose>0 0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>2.25 1.0 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <!-- Front camera -->
+        <sensor name="front_camera" type="camera">
+          <pose>6 0 3.5 0 0 0.0</pose>
+          <update_rate>15</update_rate>
+          <topic>/front_camera</topic>
+          <camera>
+            <horizontal_fov>1.39626</horizontal_fov>
+            <image>
+              <width>320</width>
+              <height>240</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>500</far>
+            </clip>
+          </camera>
+        </sensor>
+      </link>
+
+      <!-- Left wheel -->
+      <link name="left_wheel">
+        <pose>-5.0 4.0 -2.8 -1.5708 0 0</pose>
+        <inertial>
+          <mass>2.0</mass>
+          <inertia>
+            <ixx>0.05</ixx>
+            <iyy>0.05</iyy>
+            <izz>0.05</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <!-- Right wheel -->
+      <link name="right_wheel">
+        <pose>-5.0 -4.0 -2.8 -1.5708 0 0</pose>
+        <inertial>
+          <mass>2.0</mass>
+          <inertia>
+            <ixx>0.05</ixx>
+            <iyy>0.05</iyy>
+            <izz>0.05</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <!-- Caster wheel -->
+      <link name="caster">
+        <pose>5.2 0 -2.8 0 0 0</pose>
+        <inertial>
+          <mass>1.0</mass>
+          <inertia>
+            <ixx>0.01</ixx>
+            <iyy>0.01</iyy>
+            <izz>0.01</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.3</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.3</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.0</mu>
+                <mu2>0.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <!-- Joints -->
+      <joint name="left_wheel_joint" type="revolute">
+        <parent>chassis</parent>
+        <child>left_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+        </axis>
+      </joint>
+
+      <joint name="right_wheel_joint" type="revolute">
+        <parent>chassis</parent>
+        <child>right_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+        </axis>
+      </joint>
+
+      <joint name="caster_joint" type="ball">
+        <parent>chassis</parent>
+        <child>caster</child>
+      </joint>
+
+      <!-- Differential drive plugin -->
+      <plugin
+        filename="ignition-gazebo-diff-drive-system"
+        name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>8.0</wheel_separation>
+        <wheel_radius>0.3</wheel_radius>
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>chassis</robot_base_frame>
+        <frame_id>odom</frame_id>
+        <child_frame_id>chassis</child_frame_id>
+        <max_linear_acceleration>1</max_linear_acceleration>
+        <min_linear_acceleration>-1</min_linear_acceleration>
+        <max_angular_acceleration>0.5</max_angular_acceleration>
+        <min_angular_acceleration>-0.5</min_angular_acceleration>
+        <topic>/cmd_vel</topic>
+      </plugin>
+    </model>
+
+    <!-- Target Jet (dynamic, for tracking) -->
+    <model name="target_jet">
+      <pose>370.424 -162.104 3.814 0.0106 0.049 2.413</pose>
+
+      <!-- Chassis -->
+      <link name="chassis">
+        <inertial>
+          <mass>15.0</mass>
+          <inertia>
+            <ixx>2.0</ixx>
+            <iyy>2.0</iyy>
+            <izz>2.0</izz>
+          </inertia>
+        </inertial>
+
+        <visual name="visual">
+          <pose>0 0 0.5 0 0 -1.5708</pose>
+          <geometry>
+            <mesh>
+              <uri>file:///workspace/models/f14_tomcat.stl</uri>
+              <scale>1.5 1.5 1.5</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.3 0.35 0.4 1</ambient>
+            <diffuse>0.4 0.45 0.5 1</diffuse>
+            <specular>0.9 0.9 0.9 1</specular>
+          </material>
+        </visual>
+
+        <collision name="collision">
+          <pose>0 0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>2.25 1.0 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <!-- Left wheel -->
+      <link name="left_wheel">
+        <pose>-5.0 4.0 -2.8 -1.5708 0 0</pose>
+        <inertial>
+          <mass>2.0</mass>
+          <inertia>
+            <ixx>0.05</ixx>
+            <iyy>0.05</iyy>
+            <izz>0.05</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <!-- Right wheel -->
+      <link name="right_wheel">
+        <pose>-5.0 -4.0 -2.8 -1.5708 0 0</pose>
+        <inertial>
+          <mass>2.0</mass>
+          <inertia>
+            <ixx>0.05</ixx>
+            <iyy>0.05</iyy>
+            <izz>0.05</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <!-- Front caster wheel -->
+      <link name="caster">
+        <pose>5.0 0 -2.8 0 0 0</pose>
+        <inertial>
+          <mass>0.5</mass>
+          <inertia>
+            <ixx>0.01</ixx>
+            <iyy>0.01</iyy>
+            <izz>0.01</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.3</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.3</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.0</mu>
+                <mu2>0.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <!-- Joints -->
+      <joint name="left_wheel_joint" type="revolute">
+        <parent>chassis</parent>
+        <child>left_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name="right_wheel_joint" type="revolute">
+        <parent>chassis</parent>
+        <child>right_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name="caster_joint" type="ball">
+        <parent>chassis</parent>
+        <child>caster</child>
+      </joint>
+
+      <!-- Differential drive plugin -->
+      <plugin filename="ignition-gazebo-diff-drive-system"
+        name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>8.0</wheel_separation>
+        <wheel_radius>0.3</wheel_radius>
+        <odom_frame>target_odom</odom_frame>
+        <robot_base_frame>chassis</robot_base_frame>
+        <frame_id>target_odom</frame_id>
+        <child_frame_id>chassis</child_frame_id>
+        <max_linear_acceleration>1</max_linear_acceleration>
+        <min_linear_acceleration>-1</min_linear_acceleration>
+        <max_angular_acceleration>2</max_angular_acceleration>
+        <min_angular_acceleration>-2</min_angular_acceleration>
+        <topic>/target_cmd_vel</topic>
+      </plugin>
+    </model>
+  </world>
+</sdf>

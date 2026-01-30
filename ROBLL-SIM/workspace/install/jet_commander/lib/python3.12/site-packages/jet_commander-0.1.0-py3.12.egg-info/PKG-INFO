@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: jet-commander
+Version: 0.1.0
+Summary: Control package for the F14 Tomcat jet robot
+Maintainer: User
+Maintainer-email: user@example.com
+License: MIT
