@@ -1,8 +1,26 @@
+# PyTorch - Install the appropriate version for your system:
+# - With NVIDIA GPU: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+# - CPU only: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 torch>=2.0.0
 torchvision>=0.15.0
+
+# Core dependencies
+# IMPORTANT: numpy<2 required for PyTorch 2.1 compatibility
+numpy>=1.24.0,<2.0.0
 pillow>=9.0.0
-numpy>=1.24.0
 matplotlib>=3.7.0
+scipy>=1.10.0
+opencv-python-headless>=4.8.0
+pandas>=2.0.0
+tqdm>=4.65.0
+
+# Jupyter
 jupyter>=1.0.0
 notebook>=6.5.0
 ipykernel>=6.20.0
+
+# COCO dataset tools
+pycocotools>=2.0.0
+
+# Hugging Face datasets
+datasets>=2.14.0

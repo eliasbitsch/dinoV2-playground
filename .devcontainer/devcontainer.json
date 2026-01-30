@@ -1,0 +1,24 @@
+{
+  "name": "DINOv2 Playground",
+  "build": {
+    "dockerfile": "../Dockerfile.cpu"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      }
+    }
+  },
+  "mounts": [
+    "source=dinov2-models,target=/app/models,type=volume",
+    "source=dinov2-images,target=/app/images,type=volume"
+  ],
+  "postCreateCommand": "pip install ipykernel && python -m ipykernel install --user --name=dinov2",
+  "forwardPorts": [8888]
+}
